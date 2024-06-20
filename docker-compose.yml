@@ -13,6 +13,7 @@ services:
             DB_HOST: suggestion_system_db
         ports:
             - 8000:8000
+            - 5173:5173
         links:
             - suggestion_system_db
     suggestion_system_db:
