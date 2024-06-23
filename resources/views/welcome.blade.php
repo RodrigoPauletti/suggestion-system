@@ -58,11 +58,19 @@
                                         <p class="suggestion-title" x-text="suggestion.title"></p>
                                         <p class="suggestion-description" x-text="suggestion.description"></p>
                                         <div class="suggestion-additional-infos">
-                                            <p class="suggestion-additional-text" x-text="'Suggested by: ' + suggestion.author?.name"></p>
-                                            <i class="fas fa-circle"></i>
-                                            <p class="suggestion-additional-text">
-                                                <time :datetime="suggestion.created_at_datetime" x-text="suggestion.created_at"></time>
-                                            </p>
+                                            <span class="badge" x-text="suggestion.status" :class="{
+                                                'badge-pending': (suggestion.status === 'pending'),
+                                                'badge-approved': (suggestion.status === 'approved'),
+                                                'badge-rejected': (suggestion.status === 'rejected'),
+                                                'badge-under-development': (suggestion.status === 'under development'),
+                                            }"></span>
+                                            <div class="suggestion-additional-texts">
+                                                <p class="suggestion-additional-text" x-text="'Suggested by: ' + suggestion.author?.name"></p>
+                                                <i class="fas fa-circle"></i>
+                                                <p class="suggestion-additional-text">
+                                                    <time :datetime="suggestion.created_at_datetime" x-text="suggestion.created_at"></time>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>

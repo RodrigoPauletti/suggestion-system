@@ -74,15 +74,37 @@ html, body {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                justify-content: flex-end;
-                gap: 0 5px;
+                justify-content: space-between;
                 margin-top: 7px;
-                color: rgba(255, 255, 255, .6);
+                .badge {
+                    padding: 3px 7px;
+                    border-radius: 7px;
+                    font-size: .7rem;
+                    &.badge-pending {
+                        background-color: #F9A600;
+                    }
+                    &.badge-approved {
+                        background-color: #16B3A3;
+                    }
+                    &.badge-rejected {
+                        background-color: #FC4B52;
+                    }
+                    &.badge-under-development {
+                        background-color: #3F8EF8;
+                    }
+                }
                 .fa-circle {
                     font-size: 2px;
                 }
-                .suggestion-additional-text {
-                    font-size: .7rem;
+                .suggestion-additional-texts {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 0 5px;
+                    .suggestion-additional-text {
+                        font-size: .7rem;
+                        color: rgba(255, 255, 255, .6);
+                    }
                 }
             }
         }
