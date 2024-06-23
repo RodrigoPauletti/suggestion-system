@@ -107,7 +107,6 @@ class SuggestionController extends Controller
         try {
             // Check if the requested suggestion exists (based on the logged user)
             $suggestion = Suggestion::whereId($id)
-                ->whereAuthorId(auth()->user()->id)
                 ->firstOrFail();
 
             $suggestion->author_name = $suggestion->author->name ?? NULL;
