@@ -52,8 +52,15 @@ class SuggestionController extends Controller
                 unset($suggestion->voters);
             }
         }
-        // Return suggestions' list
-        return $suggestions;
+
+        $suggestionsCount = Suggestion::count();
+
+        // Return suggestions' list with information about pages
+        return [
+            'suggestions' => $suggestions,
+            'actualPage' => $page,
+            'totalPages' => ceil($suggestionsCount / Self::RECORDS_PER_PAGE),
+        ];
     }
 
     /**

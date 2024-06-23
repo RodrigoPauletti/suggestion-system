@@ -2,12 +2,20 @@ export function loadSuggestions() {
     return {
         isLoadingSuggestions: false,
         suggestions: [],
+        actualPage: 0,
+        totalPages: 0,
         getData() {
             this.isLoadingSuggestions = true;
-            fetch('/api/suggestions')
+
+            const queryString = window.location.search;
+            const parameters = new URLSearchParams(queryString);
+            const page = parameters.get('page');
+            fetch(`/api/suggestions?page=${page}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    this.suggestions = data;
+                    this.suggestions = data.suggestions;
+                    this.actualPage = data.actualPage;
+                    this.totalPages = data.totalPages;
                 })
                 .catch(err => {
                     console.error('err', err);
