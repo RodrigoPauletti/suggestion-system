@@ -87,7 +87,7 @@
                         </template>
                     </template>
                     <!-- Pagination -->
-                    <template x-if="actualPage && totalPages">
+                    <template x-if="actualPage && totalPages && totalPages > 1">
                         <nav class="pagination">
                             <a :href="actualPage > 1 ? '{{ route('welcome') }}?page=' + (actualPage - 1) : '#'" :class="{ 'disabled': actualPage <= 1 }">
                                 <i class="fas fa-chevron-left"></i>
