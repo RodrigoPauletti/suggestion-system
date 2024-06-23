@@ -28,9 +28,9 @@ class SuggestionController extends Controller
                 'id',
                 'title',
                 'description',
-                'created_at',
+                'votes',
             ])
-            ->orderByDesc('created_at') // order the suggestions based on this creation date (newest first)
+            ->orderByDesc('votes') // order the suggestions based on their votes (most voted first)
             ->take(Self::RECORDS_PER_PAGE)
             ->skip(($page - 1) * Self::RECORDS_PER_PAGE) // skip results (based on the actual page)
             ->get();
