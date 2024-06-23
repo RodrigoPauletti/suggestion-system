@@ -3,8 +3,9 @@
 use App\Http\Controllers\SuggestionController as Suggestion;
 
 Route::middleware('auth')->group(function () {
-    Route::put('suggestions/vote/{suggestion}', [Suggestion::class, 'vote'])->name('vote');
-    Route::apiResources([
-        'suggestions' => Suggestion::class
-    ]);
+    Route::controller(Suggestion::class)->prefix('/suggestions')->name('suggestions.')->group(function() {
+        Route::get('', 'index')->name('index');
+        Route::post('', 'store')->name('store');
+        Route::put('vote/{suggestion}', 'vote')->name('vote');
+    });
 });
