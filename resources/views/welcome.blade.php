@@ -22,9 +22,16 @@
             @if (Route::has('login'))
                 <header class="flex flex-1 justify-end py-4">
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
-                            Dashboard
-                        </a>
+                        <form method="POST" action="{{ route('logout') }}" class="px-3 py-2">
+                            @csrf
+
+                            <a href="{{ route('logout') }}" class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]"
+                                onclick="event.preventDefault();
+                                this.closest('form').submit();"
+                            >
+                                Logout
+                            </a>
+                        </form>
                     @else
                         <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
                             Log in
@@ -46,7 +53,7 @@
                 Create new suggestion
             </a>
 
-            <main class="flex flex-col justify-center min-h-[calc(100vh-122px)] py-8">
+            <main class="flex flex-col justify-center min-h-[calc(100vh-148px)] py-8">
                 <ul role="list" class="suggestions-list" x-data="loadSuggestions()" x-init="getData()">
                     <template x-for="suggestion in suggestions" :key="suggestion.id">
                         <template x-if="suggestion">

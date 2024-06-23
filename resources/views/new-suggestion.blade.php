@@ -19,34 +19,7 @@
 <body class="font-sans antialiased">
     <div class="relative flex flex-col items-center justify-center selection:bg-[#19196c] selection:text-white">
         <div class="relative w-full max-w-xl px-6 lg:max-w-7xl">
-            @if (Route::has('login'))
-                <header class="flex flex-1 justify-end py-4">
-                    @auth
-                        <a href="{{ url('/dashboard') }}"
-                            class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
-                            Dashboard
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                            class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
-                            Log in
-                        </a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}"
-                                class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
-                                Register
-                            </a>
-                        @endif
-                    @endauth
-                </header>
-            @endif
-
-            {{-- @can('manage-suggestions')
-                <h1>ADMIN</h1>
-            @endcan --}}
-
-            <main class="flex flex-col items-center justify-center min-h-[calc(100vh-122px)] py-8">
+            <main class="flex flex-col items-center justify-center min-h-[calc(100vh)] py-8">
                 <form action="{{ route('suggestions.index') }}" method="POST" class="w-full max-w-lg">
                     <a
                         href="{{ route('welcome') }}"
@@ -89,11 +62,6 @@
                     </button>
                 </form>
             </main>
-
-            <footer class="py-4 text-center text-sm text-white">
-                Developed by <a href="https://github.com/RodrigoPauletti" target="_blank" class="underline">Rodrigo
-                    Pauletti</a>
-            </footer>
         </div>
     </div>
 
