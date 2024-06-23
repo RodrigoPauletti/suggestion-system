@@ -21,12 +21,20 @@
         <div class="relative w-full max-w-xl px-6 lg:max-w-7xl">
             <main class="flex flex-col items-center justify-center min-h-[calc(100vh)] py-8">
                 <form action="{{ route('suggestions.index') }}" method="POST" class="w-full max-w-lg">
-                    <a
-                        href="{{ route('welcome') }}"
-                        class="shadow bg-gray-500 hover:bg-gray-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mb-12"
-                    >
-                        Back
-                    </a>
+                    <div class="button-list">
+                        <a
+                            href="{{ route('welcome') }}"
+                            class="shadow bg-gray-500 hover:bg-gray-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                        >
+                            Back
+                        </a>
+                        <button
+                            type="submit"
+                            class="shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                        >
+                            Create
+                        </button>
+                    </div>
 
                     @csrf
 

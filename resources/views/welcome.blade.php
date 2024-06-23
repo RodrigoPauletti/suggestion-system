@@ -59,7 +59,7 @@
                         <template x-if="suggestion">
                             <li class="suggestion-item" :class="suggestion.isVoted ? 'voted' : ''">
                                 <button class="suggestion-vote"
-                                    x-on:click="!suggestion.isVoted && vote(suggestion.id)" x-data="voteForSuggestion()">
+                                    x-on:click="!suggestion.isVoted && vote(suggestion.id)" x-data="voteForSuggestion()" :title="suggestion.isVoted ? 'You\'ve already voted for this suggestion!' : ''">
                                     <template x-if="suggestion.isVoted">
                                         <i class="fas fa-thumbs-up"></i>
                                     </template>

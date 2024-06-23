@@ -68,6 +68,13 @@
                         <div class="w-full px-3 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-white text-xs font-bold"
                                 for="title">
+                                Created at
+                            </label>
+                            <p class="py-3 mb-6">{{ $suggestion->created_at }}</p>
+                        </div>
+                        <div class="w-full px-3 mb-6 md:mb-0">
+                            <label class="block uppercase tracking-wide text-white text-xs font-bold"
+                                for="title">
                                 Title
                             </label>
                             <p class="py-3 mb-6">{{ $suggestion->title }}</p>
