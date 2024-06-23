@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 use DB;
 
-use App\Http\Requests\SuggestionRequest;
+use App\Http\Requests\SuggestionCreateRequest;
+use App\Http\Requests\SuggestionUpdateRequest;
 use App\Models\Suggestion;
 use App\Models\SuggestionVote;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SuggestionController extends Controller
 {
@@ -29,6 +30,7 @@ class SuggestionController extends Controller
                 'title',
                 'description',
                 'votes',
+                'status',
             ])
             ->orderByDesc('votes') // order the suggestions based on their votes (most voted first)
             ->take(Self::RECORDS_PER_PAGE)
@@ -39,7 +41,7 @@ class SuggestionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SuggestionRequest $request)
+    public function store(SuggestionCreateRequest $request)
     {
         // Start the database transaction
         DB::beginTransaction();
@@ -82,6 +84,8 @@ class SuggestionController extends Controller
                 'id' => $suggestion->id,
                 'title' => $suggestion->title,
                 'description' => $suggestion->description,
+                'votes' => $suggestion->votes,
+                'status' => $suggestion->status,
             ]);
         } catch (Exception $exception) {
             return $this->returnResponseException($exception);
@@ -91,20 +95,23 @@ class SuggestionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SuggestionRequest $request, string $id)
+    public function update(SuggestionUpdateRequest $request, string $id)
     {
+        if (!auth()->user()->can('manage-suggestions')) {
+            return response()->json([
+                'message' => __('You can\'t manage suggestions!')
+            ], 404);
+        }
+
         // Start the database transaction
         DB::beginTransaction();
         try {
-            // Check if the requested suggestion exists (based on the logged user)
-            $suggestion = Suggestion::whereId($id)
-                ->whereAuthorId(auth()->user()->id)
-                ->firstOrFail();
+            // Check if the requested suggestion exists
+            $suggestion = Suggestion::whereId($id)->firstOrFail();
 
             // Update the suggestion, based on the request fields
             $suggestion->update([
-                'title' => $request->title,
-                'description' => $request->description,
+                'status' => $request->status,
             ]);
 
             // Commit the database's changes

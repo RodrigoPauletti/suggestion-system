@@ -10,8 +10,8 @@ class SuggestionVote extends Model
 {
     use HasFactory;
 
+    // Model configs to set the PK as UUID
     protected $keyType = 'string';
-
     public $incrementing = false;
 
     protected $fillable = [
@@ -25,8 +25,8 @@ class SuggestionVote extends Model
     protected static function booted(): void
     {
         static::creating(function (SuggestionVote $model) {
-            $model->id = Str::uuid();
-            $model->user_id = auth()->user()->id;
+            $model->id = Str::uuid(); // Automatically generate an UUID
+            $model->user_id = auth()->user()->id; // Set the logged user a voter of the suggestion
         });
     }
 
