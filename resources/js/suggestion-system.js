@@ -10,7 +10,7 @@ export function loadSuggestions() {
             const queryString = window.location.search;
             const parameters = new URLSearchParams(queryString);
             const page = parameters.get('page') ?? 1;
-            fetch(`/api/suggestions?page=${page}`)
+            fetch(`/suggestions?page=${page}`)
                 .then((response) => response.json())
                 .then((data) => {
                     if (!data.suggestions.length && page > 1) {
@@ -38,7 +38,10 @@ export function voteForSuggestion() {
             if (!this.isVoting) {
                 this.isVoting = true;
                 let responseStatus;
-                fetch(`/api/suggestions/vote/${suggestionId}`, {
+                fetch(`/suggestions/vote/${suggestionId}`, {
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
                     method: 'PUT'
                 })
                     .then((response) => {

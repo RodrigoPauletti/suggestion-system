@@ -17,6 +17,8 @@
 </head>
 
 <body class="font-sans antialiased">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <div class="relative flex flex-col items-center justify-center selection:bg-[#19196c] selection:text-white">
         <div class="relative w-full max-w-xl px-6">
             @if (Route::has('login'))
@@ -57,9 +59,13 @@
                 <ul role="list" class="suggestions-list" x-data="loadSuggestions()" x-init="getData()">
                     <template x-for="suggestion in suggestions" :key="suggestion.id">
                         <template x-if="suggestion">
-                            <li class="suggestion-item" :class="suggestion.isVoted ? 'voted' : ''">
-                                <button class="suggestion-vote"
-                                    x-on:click="!suggestion.isVoted && vote(suggestion.id)" x-data="voteForSuggestion()" :title="suggestion.isVoted ? 'You\'ve already voted for this suggestion!' : ''">
+                            <li class="suggestion-item" :class="suggestion.isVoted ? 'voted' : ''" x-data="{ userId: '{{ auth()->user()?->id }}' }">
+                                <button
+                                    class="suggestion-vote"
+                                    x-on:click="userId ? (!suggestion.isVoted && vote(suggestion.id)) : window.location.href = '/login'"
+                                    x-data="voteForSuggestion()"
+                                    :title="suggestion.isVoted ? 'You\'ve already voted for this suggestion!' : ''"
+                                >
                                     <template x-if="suggestion.isVoted">
                                         <i class="fas fa-thumbs-up"></i>
                                     </template>
@@ -92,7 +98,7 @@
                                     </div>
                                     @can('manage-suggestions')
                                         <a :href="updateSuggestionRoute.replace(':suggestionId', suggestion.id)" class="change-status">
-                                            Change suggestion status
+                                            Change status
                                         </a>
                                     @endcan
                                 </div>

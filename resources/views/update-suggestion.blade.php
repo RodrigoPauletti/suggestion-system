@@ -21,6 +21,10 @@
         <div class="relative w-full max-w-xl px-6 lg:max-w-7xl">
             <main class="flex flex-col items-center justify-center min-h-[calc(100vh)] py-8">
                 <form action="{{ route('suggestion.change-status', $suggestion->id) }}" method="POST" class="w-full max-w-lg">
+                    @csrf
+
+                    @method('PUT')
+
                     <div class="button-list">
                         <a
                             href="{{ route('welcome') }}"
@@ -35,10 +39,6 @@
                             Update
                         </button>
                     </div>
-
-                    @csrf
-
-                    @method('PUT')
 
                     <div class="flex flex-wrap -mx-3 mt-8">
                         <div class="w-full px-3 mb-6 md:mb-0">

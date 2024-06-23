@@ -24,7 +24,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        if (!Auth::attempt([
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+        ])) {
+            return redirect()->intended(route('login', absolute: false));
+        }
 
         $request->session()->regenerate();
 
@@ -38,9 +43,9 @@ class AuthenticatedSessionController extends Controller
     {
         Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+        // $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+        // $request->session()->regenerateToken();
 
         return redirect('/');
     }

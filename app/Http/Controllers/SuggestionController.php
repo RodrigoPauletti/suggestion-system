@@ -47,9 +47,11 @@ class SuggestionController extends Controller
             foreach ($suggestions as $suggestion) {
                 $suggestion->created_at_datetime = Carbon::parse($suggestion->created_at)->format('Y-m-d\TH:i\Z');
                 // Checks if the logged user voted for the suggestion
-                $suggestion->isVoted = $suggestion->voters()->get()->filter(function ($voter) {
-                    return $voter->user_id === auth()->user()->id;
-                })->count() > 0;
+                if (auth()->check()) {
+                    $suggestion->isVoted = $suggestion->voters()->get()->filter(function ($voter) {
+                        return $voter->user_id === auth()->user()?->id;
+                    })->count() > 0;
+                }
                 $suggestion->author_name = $suggestion->author->name ?? NULL;
                 unset($suggestion->author_id, $suggestion->author, $suggestion->voters);
             }
