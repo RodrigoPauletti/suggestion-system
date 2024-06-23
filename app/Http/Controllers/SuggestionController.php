@@ -8,6 +8,7 @@ use DB;
 
 use App\Http\Requests\SuggestionRequest;
 use App\Models\Suggestion;
+use App\Models\SuggestionVote;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SuggestionController extends Controller
@@ -52,7 +53,7 @@ class SuggestionController extends Controller
             // Commit the database's changes
             DB::commit();
 
-            // Returns that the suggestion was created
+            // Returns a message that the suggestion was created
             return response()->json([
                 'message' => __('Suggestion successfully created!')
             ], 201);
@@ -72,7 +73,7 @@ class SuggestionController extends Controller
     public function show(string $id)
     {
         try {
-            // Get the requested suggestion (based on the logged user)
+            // Check if the requested suggestion exists (based on the logged user)
             $suggestion = Suggestion::whereId($id)
                 ->whereAuthorId(auth()->user()->id)
                 ->firstOrFail();
@@ -95,7 +96,7 @@ class SuggestionController extends Controller
         // Start the database transaction
         DB::beginTransaction();
         try {
-            // Get the requested suggestion (based on the logged user)
+            // Check if the requested suggestion exists (based on the logged user)
             $suggestion = Suggestion::whereId($id)
                 ->whereAuthorId(auth()->user()->id)
                 ->firstOrFail();
@@ -109,7 +110,7 @@ class SuggestionController extends Controller
             // Commit the database's changes
             DB::commit();
 
-            // Returns that the suggestion was updated
+            // Returns a message that the suggestion was updated
             return response()->json([
                 'message' => __('Suggestion successfully updated!')
             ], 200);
@@ -126,8 +127,10 @@ class SuggestionController extends Controller
      */
     public function destroy(string $id)
     {
+        // Start the database transaction
+        DB::beginTransaction();
         try {
-            // Get the requested suggestion (based on the logged user)
+            // Check if the requested suggestion exists (based on the logged user)
             $suggestion = Suggestion::whereId($id)
                 ->whereAuthorId(auth()->user()->id)
                 ->firstOrFail();
@@ -135,8 +138,55 @@ class SuggestionController extends Controller
             // Delete the requested suggestion
             $suggestion->delete();
 
+            // Commit the database's changes
+            DB::commit();
+
             // Returns empty response with status code 204 (no content)
             return response()->noContent();
+        } catch (Exception $exception) {
+            // Rollback the database's changes
+            DB::rollBack();
+
+            return $this->returnResponseException($exception);
+        }
+    }
+
+    /**
+     * Vote for the specified resource.
+     */
+    public function vote(string $id)
+    {
+        // Start the database transaction
+        DB::beginTransaction();
+        try {
+            $userId = auth()->user()->id;
+
+            // Check if the requested suggestion exists
+            $suggestion = Suggestion::whereId($id)->firstOrFail();
+
+            // Check if the logged user already voted for the requested suggestion
+            $suggestionAlreadyVotedByLoggedUser = SuggestionVote::whereSuggestionId($suggestion->id)
+                ->whereUserId($userId)
+                ->count() > 0;
+            if ($suggestionAlreadyVotedByLoggedUser) {
+                throw new Exception(__('You\'ve already voted for this suggestion!'), 403);
+            }
+
+            // Create the relation between the suggestion and the logged user
+            SuggestionVote::create([
+                'suggestion_id' => $suggestion->id,
+            ]);
+
+            // Increment the `votes` value from the suggestion
+            $suggestion->increment('votes');
+
+            // Commit the database's changes
+            DB::commit();
+
+            // Returns the message that the user's vote was computed
+            return response()->json([
+                'message' => __('Vote successfully computed!')
+            ], 200);
         } catch (Exception $exception) {
             // Rollback the database's changes
             DB::rollBack();
@@ -159,7 +209,7 @@ class SuggestionController extends Controller
         // Returns the generic exception message (with status code 500)
         return response()->json([
             'message' => $exception->getMessage()
-        ], 500);
+        ], $exception->getCode());
     }
 
 }
