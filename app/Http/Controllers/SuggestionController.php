@@ -39,6 +39,7 @@ class SuggestionController extends Controller
                 'voters',
             ])
             ->orderByDesc('votes') // order the suggestions based on their votes (most voted first)
+            ->orderBy('created_at')
             ->take(Self::RECORDS_PER_PAGE)
             ->skip(($page - 1) * Self::RECORDS_PER_PAGE) // skip results (based on the actual page)
             ->get();
@@ -98,21 +99,23 @@ class SuggestionController extends Controller
      */
     public function show(string $id)
     {
+        if (!auth()->user()->can('manage-suggestions')) {
+            // Redirect the user to home
+            return redirect()->route('welcome');
+        }
+
         try {
             // Check if the requested suggestion exists (based on the logged user)
             $suggestion = Suggestion::whereId($id)
                 ->whereAuthorId(auth()->user()->id)
                 ->firstOrFail();
 
-            return response()->json([
-                'id' => $suggestion->id,
-                'title' => $suggestion->title,
-                'description' => $suggestion->description,
-                'votes' => $suggestion->votes,
-                'status' => $suggestion->status,
-            ]);
+            $suggestion->author_name = $suggestion->author->name ?? NULL;
+
+            return view('update-suggestion')->with(compact('suggestion'));
         } catch (Exception $exception) {
-            return $this->returnResponseException($exception);
+            // Redirect the user to home
+            return redirect()->route('welcome');
         }
     }
 
@@ -122,9 +125,8 @@ class SuggestionController extends Controller
     public function update(SuggestionUpdateRequest $request, string $id)
     {
         if (!auth()->user()->can('manage-suggestions')) {
-            return response()->json([
-                'message' => __('You can\'t manage suggestions!')
-            ], 404);
+            // Redirect the user to home
+            return redirect()->route('welcome');
         }
 
         // Start the database transaction
@@ -141,15 +143,14 @@ class SuggestionController extends Controller
             // Commit the database's changes
             DB::commit();
 
-            // Returns a message that the suggestion was updated
-            return response()->json([
-                'message' => __('Suggestion successfully updated!')
-            ], 200);
+            // Redirect the user to home
+            return redirect()->route('welcome');
         } catch (Exception $exception) {
             // Rollback the database's changes
             DB::rollBack();
 
-            return $this->returnResponseException($exception);
+            // Redirect the user to home
+            return redirect()->route('welcome');
         }
     }
 

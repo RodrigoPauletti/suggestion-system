@@ -68,7 +68,7 @@
                                     </template>
                                     <span class="suggestion-vote-count" x-text="suggestion.votes"></span>
                                 </button>
-                                <div class="suggestion-infos">
+                                <div class="suggestion-infos" x-data="{ updateSuggestionRoute: '{{ route('suggestion.edit-status', ['suggestion' => ':suggestionId']) }}' }">
                                     <p class="suggestion-title" x-text="suggestion.title"></p>
                                     <p class="suggestion-description" x-text="suggestion.description"></p>
                                     <div class="suggestion-additional-infos">
@@ -78,7 +78,8 @@
                                                 'badge-approved': (suggestion.status === 'approved'),
                                                 'badge-rejected': (suggestion.status === 'rejected'),
                                                 'badge-under-development': (suggestion.status === 'under development'),
-                                            }"></span>
+                                            }"
+                                        ></span>
                                         <div class="suggestion-additional-texts">
                                             <p class="suggestion-additional-text"
                                                 x-text="'Suggested by: ' + suggestion.author_name"></p>
@@ -89,6 +90,11 @@
                                             </p>
                                         </div>
                                     </div>
+                                    @can('manage-suggestions')
+                                        <a :href="updateSuggestionRoute.replace(':suggestionId', suggestion.id)" class="change-status">
+                                            Change suggestion status
+                                        </a>
+                                    @endcan
                                 </div>
                             </li>
                         </template>
