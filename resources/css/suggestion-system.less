@@ -1,0 +1,102 @@
+html, body {
+    background-color: #0E0E1B;
+    color: #FFF;
+}
+
+.suggestions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px 0;
+    .suggestion-item {
+        box-shadow: 0 0 7px rgb(11, 66, 121, .5);
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        width: 100%;
+        background-color: #0b4279;
+        border-radius: 7px;
+        overflow: hidden;
+        color: #FFF;
+        transition: .3s ease all;
+        &:hover {
+            transform: translateY(-5px);
+        }
+        .suggestion-vote {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 7px;
+            transition: .3s ease all;
+            color: #FFF;
+            width: 60px;
+            i {
+                border-radius: 20px;
+                padding: 7px;
+                font-size: 14px;
+                background-color: rgba(0, 0, 0, 0.3);
+                color: #FFF;
+            }
+            .suggestion-vote-count {
+                margin-top: 7px;
+                font-size: .8rem;
+                line-break: auto;
+                text-align: center;
+                word-break: break-all;
+            }
+            &:focus {
+                outline: none;
+            }
+            &:hover {
+                background-color: #FFF;
+                color: #0b4279;
+                i {
+                    background-color: #0b4279;
+                    color: #FFF;
+                }
+            }
+        }
+        .suggestion-infos {
+            border-left: 1px solid #0E0E1B;
+            width: 100%;
+            padding: 7px 10px;
+            color: #FFF;
+            .suggestion-title {
+                font-weight: 600;
+                font-size: 1rem;
+            }
+            .suggestion-description {
+                font-weight: 400;
+                font-size: .8rem;
+                color: rgba(255, 255, 255, .8);
+            }
+            .suggestion-additional-infos {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 0 5px;
+                margin-top: 7px;
+                color: rgba(255, 255, 255, .6);
+                .fa-circle {
+                    font-size: 2px;
+                }
+                .suggestion-additional-text {
+                    font-size: .7rem;
+                }
+            }
+        }
+        &.voted {
+            .suggestion-vote {
+                i {
+                    background-color: #3DD83D;
+                }
+                &:hover {
+                    cursor: default;
+                    background-color: #0b4279;
+                    color: #FFF;
+                }
+            }
+        }
+    }
+}

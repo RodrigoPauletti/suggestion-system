@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Exception;
 use DB;
+use Carbon\Carbon;
 
 use App\Http\Requests\SuggestionCreateRequest;
 use App\Http\Requests\SuggestionUpdateRequest;
@@ -24,18 +25,35 @@ class SuggestionController extends Controller
         // Get the requested page (if doesn't exists, set to the first page)
         $page = $request->input('page') ?? 1;
 
-        // Return suggestions and their votes
-        return Suggestion::select([
+        $suggestions = Suggestion::select([
                 'id',
+                'author_id',
                 'title',
                 'description',
                 'votes',
                 'status',
+                'created_at',
+            ])
+            ->with([
+                'author',
+                'voters',
             ])
             ->orderByDesc('votes') // order the suggestions based on their votes (most voted first)
             ->take(Self::RECORDS_PER_PAGE)
             ->skip(($page - 1) * Self::RECORDS_PER_PAGE) // skip results (based on the actual page)
             ->get();
+        if (!empty($suggestions) && count($suggestions)) {
+            foreach ($suggestions as $suggestion) {
+                $suggestion->created_at_datetime = Carbon::parse($suggestion->created_at)->format('Y-m-d\TH:i\Z');
+                // Checks if the logged user voted for the suggestion
+                $suggestion->isVoted = $suggestion->voters()->get()->filter(function ($voter) {
+                    return $voter->user_id === auth()->user()->id;
+                })->count() > 0;
+                unset($suggestion->voters);
+            }
+        }
+        // Return suggestions' list
+        return $suggestions;
     }
 
     /**
