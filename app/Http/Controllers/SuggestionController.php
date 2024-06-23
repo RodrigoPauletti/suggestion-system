@@ -49,7 +49,8 @@ class SuggestionController extends Controller
                 $suggestion->isVoted = $suggestion->voters()->get()->filter(function ($voter) {
                     return $voter->user_id === auth()->user()->id;
                 })->count() > 0;
-                unset($suggestion->voters);
+                $suggestion->author_name = $suggestion->author->name ?? NULL;
+                unset($suggestion->author_id, $suggestion->author, $suggestion->voters);
             }
         }
 
@@ -80,10 +81,8 @@ class SuggestionController extends Controller
             // Commit the database's changes
             DB::commit();
 
-            // Returns a message that the suggestion was created
-            return response()->json([
-                'message' => __('Suggestion successfully created!')
-            ], 201);
+            // Redirect the user to home
+            return redirect()->route('welcome');
         } catch (Exception $exception) {
             // Rollback the database's changes
             DB::rollBack();

@@ -16,32 +16,35 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased {{-- dark:bg-black dark:text-white/50 --}}">
-    <div
-        class="relative {{-- min-h-screen --}} flex flex-col items-center justify-center selection:bg-[#19196c] selection:text-white">
-        <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
+<body class="font-sans antialiased">
+    <div class="relative flex flex-col items-center justify-center selection:bg-[#19196c] selection:text-white">
+        <div class="relative w-full max-w-xl px-6">
             @if (Route::has('login'))
                 <header class="flex flex-1 justify-end py-4">
                     @auth
-                        <a href="{{ url('/dashboard') }}"
-                            class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c] {{-- dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white --}}">
+                        <a href="{{ url('/dashboard') }}" class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
                             Dashboard
                         </a>
                     @else
-                        <a href="{{ route('login') }}"
-                            class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c] {{-- dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white --}}">
+                        <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
                             Log in
                         </a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}"
-                                class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c] {{-- dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white --}}">
+                            <a href="{{ route('register') }}" class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
                                 Register
                             </a>
                         @endif
                     @endauth
                 </header>
             @endif
+
+            <a
+                href="{{ route('suggestion.create') }}"
+                class="shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mb-12"
+            >
+                Create new suggestion
+            </a>
 
             <main class="flex flex-col justify-center min-h-[calc(100vh-122px)] py-8">
                 <ul role="list" class="suggestions-list" x-data="loadSuggestions()" x-init="getData()">
@@ -71,7 +74,7 @@
                                             }"></span>
                                         <div class="suggestion-additional-texts">
                                             <p class="suggestion-additional-text"
-                                                x-text="'Suggested by: ' + suggestion.author?.name"></p>
+                                                x-text="'Suggested by: ' + suggestion.author_name"></p>
                                             <i class="fas fa-circle"></i>
                                             <p class="suggestion-additional-text">
                                                 <time :datetime="suggestion.created_at_datetime"
@@ -105,7 +108,7 @@
                 </ul>
             </main>
 
-            <footer class="py-4 text-center text-sm text-white {{-- dark:text-white/70 --}}">
+            <footer class="py-4 text-center text-sm text-white">
                 Developed by <a href="https://github.com/RodrigoPauletti" target="_blank" class="underline">Rodrigo
                     Pauletti</a>
             </footer>

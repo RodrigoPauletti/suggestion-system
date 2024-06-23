@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
+<body class="font-sans antialiased">
+    <div class="relative flex flex-col items-center justify-center selection:bg-[#19196c] selection:text-white">
+        <div class="relative w-full max-w-xl px-6 lg:max-w-7xl">
+            @if (Route::has('login'))
+                <header class="flex flex-1 justify-end py-4">
+                    @auth
+                        <a href="{{ url('/dashboard') }}"
+                            class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
+                            Dashboard
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
+                            Log in
+                        </a>
+
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}"
+                                class="rounded-md px-3 py-2 text-white ring-1 ring-transparent transition hover:bg-[#19196C] focus:outline-none focus-visible:ring-[#19196c]">
+                                Register
+                            </a>
+                        @endif
+                    @endauth
+                </header>
+            @endif
+
+            {{-- @can('manage-suggestions')
+                <h1>ADMIN</h1>
+            @endcan --}}
+
+            <main class="flex flex-col items-center justify-center min-h-[calc(100vh-122px)] py-8">
+                <form action="{{ route('suggestions.index') }}" method="POST" class="w-full max-w-lg">
+                    <a
+                        href="{{ route('welcome') }}"
+                        class="shadow bg-gray-500 hover:bg-gray-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded mb-12"
+                    >
+                        Back
+                    </a>
+
+                    @csrf
+
+                    <div class="flex flex-wrap -mx-3 mt-8 mb-2">
+                        <div class="w-full px-3 mb-6 md:mb-0">
+                            <label class="block uppercase tracking-wide text-white text-xs font-bold mb-2"
+                                for="title">
+                                Title
+                            </label>
+                            <input
+                                class="appearance-none block w-full bg-white text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                id="title" name="title" type="text" required>
+                            <x-input-error :messages="$errors->get('title')" class="text-red-500 text-xs italic" />
+                            {{-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> --}}
+                        </div>
+                        <div class="w-full px-3 mb-6 md:mb-0">
+                            <label class="block uppercase tracking-wide text-white text-xs font-bold mb-2"
+                                for="description">
+                                Description
+                            </label>
+                            <textarea
+                                class="appearance-none block w-full bg-white text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                id="description" name="description" rows="5" required></textarea>
+                            <x-input-error :messages="$errors->get('description')" class="text-red-500 text-xs italic" />
+                            {{-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> --}}
+                        </div>
+                    </div>
+                    <button
+                        type="submit"
+                        class="shadow bg-green-500 hover:bg-green-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                    >
+                        Create
+                    </button>
+                </form>
+            </main>
+
+            <footer class="py-4 text-center text-sm text-white">
+                Developed by <a href="https://github.com/RodrigoPauletti" target="_blank" class="underline">Rodrigo
+                    Pauletti</a>
+            </footer>
+        </div>
+    </div>
+
+</body>
+
+</html>

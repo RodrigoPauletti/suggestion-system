@@ -9,10 +9,14 @@ export function loadSuggestions() {
 
             const queryString = window.location.search;
             const parameters = new URLSearchParams(queryString);
-            const page = parameters.get('page');
+            const page = parameters.get('page') ?? 1;
             fetch(`/api/suggestions?page=${page}`)
                 .then((response) => response.json())
                 .then((data) => {
+                    if (!data.suggestions.length && page > 1) {
+                        // If suggestions is empty (and page is greater than 1), redirect to home
+                        return window.location.href = '/';
+                    }
                     this.suggestions = data.suggestions;
                     this.actualPage = data.actualPage;
                     this.totalPages = data.totalPages;
@@ -44,7 +48,7 @@ export function voteForSuggestion() {
                     .then((data) => {
                         if (responseStatus !== 200) {
                             if (data.message) {
-                                // TODO: Show error message
+                                alert(data.message);
                             }
                             return;
                         }
